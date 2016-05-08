@@ -1,0 +1,26 @@
+{
+  "name": "fakestagram-backend-nodejs",
+  "version": "1.0.0",
+  "description": "Fake Instagram backend for learning and teaching Nodejs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/practicalprogramming-io/fakestagram-backend-nodejs.git"
+  },
+  "author": "Adrian Sonnenschein",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/practicalprogramming-io/fakestagram-backend-nodejs/issues"
+  },
+  "homepage": "https://github.com/practicalprogramming-io/fakestagram-backend-nodejs#readme",
+  "dependencies": {
+    "bcrypt": "^0.8.6",
+    "bookshelf": "^0.9.4",
+    "express": "^4.13.4",
+    "knex": "^0.11.1",
+    "passport": "^0.3.2"
+  }
+}
