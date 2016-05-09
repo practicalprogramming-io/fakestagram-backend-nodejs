@@ -1,0 +1,95 @@
+'use strict'
+
+
+var express = require('express')
+  , cookieParser = require('cookie-parser')
+  , session = require('session')
+  , bodyParser = require('body-parser')
+  , passport = require('passport')
+  , config = require('./config.json')
+  , database = require('./database')
+  , routes = require('./routes')(database)
+  , require('./passport')(passport)
+  , server = express()
+
+
+server.set('port', process.env.PORT || 3030)
+server.use(cookieParser('secret'))
+server.use(bodyParser.urlencoded({extended: true}))
+server.use(bodyParser.json({limit: '25mb'}))
+server.use(session({secret: 'secret', saveUninitialized: true, resave: true}))
+server.use(passport.initialize())
+server.use(passport.session())
+server.enable('trust proxy')
+
+
+function requireAuthorization (req, res, next) {
+  if (req.isAuthenticated && req.user.id) return next()
+  else res.status(401).send("Unauthorized request!")
+}
+
+
+// Register, login and logout routes ===========================================
+
+server.post('/login/',
+  passport.authenticate('login'),
+  function (req, res, next) {
+    var username = req.user.get('username')
+    res.redirect('/' + username + '/')
+  })
+
+server.post('/register/',
+  passport.authenticate('register'),
+  function (req, res, next) {
+    var username = req.user.get('username')
+    res.redirect('/' + username + '/')
+  })
+
+server.get('/logout/',
+  requireAuthorization,
+  function (req, res, next) {
+    req.logout()
+  })
+
+
+// Content routes ==============================================================
+
+server.get('/:username/',
+  function (req, res, next) {
+    return next()
+  }, routes.getUser)
+
+server.post('/content/',
+  requireAuthorization,
+  function (req, res, next) {
+    return next()
+  }, routes.postContent)
+
+server.post('/content/:content_guid/comment/',
+  function (req, res, next) {
+    return next()
+  }, routes.postComment)
+
+server.get('/content/:content_guid/',
+  function (req, res, next) {
+    return next()
+  }, routes.getContent)
+
+
+// Message routes ==============================================================
+
+server.get('/messages/:message_guid/',
+  requireAuthorization,
+  function (req, res, next) {
+    return next()
+  }, routes.getMessage)
+
+server.post('/messages/',
+  function (req, res, next) {
+    return next()
+  }, routes.postMessage)
+
+
+module.exports = function (callback) {
+  callback(server)
+}

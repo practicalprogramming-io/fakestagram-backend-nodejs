@@ -1,3 +1,6 @@
+'use strict'
+
+
 var bcrypt = require('bcrypt-nodejs')
   , config = require('./config.json')
   , knex = require('knex')(config.db)
@@ -61,6 +64,9 @@ module.exports = {
   Tags: bookshelf.Model.extend({
     tableName: 'tags',
     idAttribute: 'tags_id',
+    content: function () {
+      return this.hasMany(Content, 'tags_id')
+    }
   }),
 
   ContentTags: bookshelf.Model.extend({
@@ -74,21 +80,39 @@ module.exports = {
   UsersFollowers: bookshelf.Model.extend({
     tableName: 'users_followers',
     idAttribute: 'users_followers_id',
+    followers: function () {
+      return this.hasMany(Users, 'users_id')
+    },
+    following: function () {
+      return this.hasMany(Users, 'follow_users_id')
+    }
   }),
 
   UsersBlocked: bookshelf.Model.extend({
     tableName: 'users_blocked',
     idAttribute: 'users_blocked_id',
+    blocked: function () {
+      return this.hasMany(Users, 'blocked_users_id')
+    }
   }),
 
   Messages: bookshelf.Model.extend({
     tableName: 'messages',
     idAttribute: 'messages_id',
+    users: function () {
+
+    }
   }),
 
   UsersMessages: bookshelf.Model.extend({
     tableName: 'users_messages',
     idAttribute: 'users_messages_id',
+    sent: function () {
+
+    },
+    received: function () {
+
+    }
   })
 
 }

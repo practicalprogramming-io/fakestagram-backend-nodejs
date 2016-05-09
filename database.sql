@@ -3,7 +3,7 @@ CREATE TABLE users (
     username VARCHAR,
     email VARCHAR,
     password VARCHAR,
-    description VARCHAR,
+    bio VARCHAR,
     last_login TIMESTAMP,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -30,6 +30,17 @@ CREATE TABLE content_tags (
     content_id INTEGER REFERENCES content(content_id)
 );
 
+CREATE TABLE comments (
+  comments_id SERIAL PRIMARY KEY,
+  comment VARCHAR
+);
+
+CREATE TABLE content_comments (
+  content_comments_id SERIAL PRIMARY KEY,
+  content_id INTEGER REFERENCES content(content_id) ON DELETE CASCADE,
+  comments_id INTEGER REFERENCES comments(comments_id) ON DELETE CASCADE
+);
+
 CREATE TABLE users_followers (
     users_followers_id SERIAL PRIMARY KEY,
     users_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE,
@@ -50,6 +61,7 @@ CREATE TABLE messages (
 
 CREATE TABLE users_messages (
     users_messages_id SERIAL PRIMARY KEY,
+    messages_id INTEGER REFERENCES messages(messages_id) ON DELETE CASCADE,
     sender_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE,
     receiver_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE
 );
