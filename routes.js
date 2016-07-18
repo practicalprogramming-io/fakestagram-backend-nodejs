@@ -6,7 +6,7 @@ module.exports = function (database) {
   return {
 
     getUser: function (req, res, next) {
-      
+
     },
 
     postContent: function (req, res, next) {
@@ -19,7 +19,7 @@ module.exports = function (database) {
 
     postComment: function (req, res, next) {
 
-    }
+    },
 
     getMessage: function (req, res, next) {
 

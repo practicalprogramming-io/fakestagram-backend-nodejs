@@ -1,0 +1,12 @@
+{
+  "db": {
+    "client": "postgres",
+    "connection": {
+      "host": "127.0.0.1",
+      "user": "fakestagram_user",
+      "password": "password",
+      "database": "fakestagram_db",
+      "charset": "utf8"
+    }
+  }
+}

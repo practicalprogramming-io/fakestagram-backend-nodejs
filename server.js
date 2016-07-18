@@ -3,15 +3,15 @@
 
 var express = require('express')
   , cookieParser = require('cookie-parser')
-  , session = require('session')
+  , session = require('express-session')
   , bodyParser = require('body-parser')
   , passport = require('passport')
   , config = require('./config.json')
   , database = require('./database')
   , routes = require('./routes')(database)
-  , require('./passport')(passport)
   , server = express()
 
+require('./passport')(passport)
 
 server.set('port', process.env.PORT || 3030)
 server.use(cookieParser('secret'))
@@ -34,21 +34,24 @@ function requireAuthorization (req, res, next) {
 server.post('/login/',
   passport.authenticate('login'),
   function (req, res, next) {
-    var username = req.user.get('username')
-    res.redirect('/' + username + '/')
+    res.status(200).end()
+//    var username = req.user.get('username')
+//    res.redirect('/' + username + '/')
   })
 
 server.post('/register/',
   passport.authenticate('register'),
   function (req, res, next) {
-    var username = req.user.get('username')
-    res.redirect('/' + username + '/')
+    res.status(201).end()
+//    var username = req.user.get('username')
+//    res.redirect('/' + username + '/')
   })
 
 server.get('/logout/',
   requireAuthorization,
   function (req, res, next) {
     req.logout()
+    res.status(200).end()
   })
 
 

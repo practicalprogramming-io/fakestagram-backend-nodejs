@@ -1,10 +1,10 @@
 'use strict'
 
 
-var bcrypt = require('bcrypt-nodejs')
+var bcrypt = require('bcrypt')
   , config = require('./config.json')
   , knex = require('knex')(config.db)
-  , bookshelf = require('bookshelf')(kenx)
+  , bookshelf = require('bookshelf')(knex)
   , save = bookshelf.Model.prototype.save
   , Users
   , Content
