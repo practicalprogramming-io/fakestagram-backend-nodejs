@@ -6,10 +6,18 @@ var express = require('express')
   , session = require('express-session')
   , bodyParser = require('body-parser')
   , passport = require('passport')
+  , multer = require('multer')
   , config = require('./config.json')
   , database = require('./database')
   , routes = require('./routes')(database)
   , server = express()
+  , upload = multer({
+      dest: config.uploads,
+      onFileUploadStart: function (file, req, res) {
+        if (config.allowed_extensions.indexOf(file.extension) < 0) return false
+      }
+    })
+
 
 require('./passport')(passport)
 
@@ -64,6 +72,7 @@ server.get('/:username/',
 
 server.post('/content/',
   requireAuthorization,
+  upload.single('photo'),
   function (req, res, next) {
     return next()
   }, routes.postContent)

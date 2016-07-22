@@ -32,25 +32,15 @@ CREATE TABLE content_tags (
 
 CREATE TABLE comments (
   comments_id SERIAL PRIMARY KEY,
-  comment VARCHAR
-);
-
-CREATE TABLE content_comments (
-  content_comments_id SERIAL PRIMARY KEY,
+  users_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE,
   content_id INTEGER REFERENCES content(content_id) ON DELETE CASCADE,
-  comments_id INTEGER REFERENCES comments(comments_id) ON DELETE CASCADE
+  comment VARCHAR
 );
 
 CREATE TABLE users_followers (
     users_followers_id SERIAL PRIMARY KEY,
     users_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE,
     follow_users_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE
-);
-
-CREATE TABLE users_blocked (
-    users_blocked_id SERIAL PRIMARY KEY,
-    users_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE,
-    blocked_users_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE
 );
 
 CREATE TABLE messages (
