@@ -63,6 +63,21 @@ server.get('/logout/',
   })
 
 
+// Message routes ==============================================================
+
+server.get('/messages/:messages_id?/',
+  requireAuthorization,
+  function (req, res, next) {
+    return next()
+  }, routes.getMessage)
+
+server.post('/messages/',
+  requireAuthorization,
+  function (req, res, next) {
+    return next()
+  }, routes.postMessage)
+
+
 // Content routes ==============================================================
 
 server.get('/:username/',
@@ -86,20 +101,6 @@ server.get('/content/:content_guid/',
   function (req, res, next) {
     return next()
   }, routes.getContent)
-
-
-// Message routes ==============================================================
-
-server.get('/messages/:message_guid/',
-  requireAuthorization,
-  function (req, res, next) {
-    return next()
-  }, routes.getMessage)
-
-server.post('/messages/',
-  function (req, res, next) {
-    return next()
-  }, routes.postMessage)
 
 
 module.exports = function (callback) {

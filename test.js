@@ -92,4 +92,62 @@ describe('Fakestagram Tests', function () {
 
   })
 
+  describe('MESSAGE Tests', function () {
+
+    var userOne = "userOne"
+      , userTwo = "userTwo"
+
+    it('POST register a new user account', function (done) {
+      var request = {
+        "username": userOne,
+        "email": userOne + "@test.com",
+        "password": "secret"
+      }
+      agent.post('/register/').send(request).expect(201, done)
+    })
+
+    it('POST register a new user account', function (done) {
+      var request = {
+        "username": userTwo,
+        "email": userTwo + "@test.com",
+        "password": "secret"
+      }
+      agent.post('/register/').send(request).expect(201, done)
+    })
+
+    it('POST login to existing user account', function (done) {
+      var request = {
+        "username": userTwo,
+        "email": userTwo + "@test.com",
+        "password": "secret"
+      }
+      agent.post('/login/').send(request).expect(200, done)
+    })
+
+    it('POST new message', function (done) {
+      var request = {
+        "receive_user": userOne,
+        "message": "Hello world!"
+      }
+      agent.post('/messages/').send(request).expect(200, done)
+    })
+
+    it('POST new message', function (done) {
+      var request = {
+        "receive_user": userOne,
+        "message": "Hello world again!"
+      }
+      agent.post('/messages/').send(request).expect(200, done)
+    })
+
+    it('GET message from inbox', function (done) {
+      agent.get('/messages/').expect(200, done)
+    })
+
+    it('GET logout out logged in user account', function (done) {
+      agent.get('/logout/').expect(200, done)
+    })
+
+  })
+
 })

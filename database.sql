@@ -53,5 +53,6 @@ CREATE TABLE users_messages (
     users_messages_id SERIAL PRIMARY KEY,
     messages_id INTEGER REFERENCES messages(messages_id) ON DELETE CASCADE,
     sender_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE,
-    receiver_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE
+    receiver_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE,
+    read BOOLEAN DEFAULT FALSE
 );

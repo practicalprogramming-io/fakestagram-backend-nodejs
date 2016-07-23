@@ -134,5 +134,6 @@ module.exports = {
   Comments: Comments,
   UsersFollowers: UsersFollowers,
   Messages: Messages,
-  UsersMessages: UsersMessages
+  UsersMessages: UsersMessages,
+  Bookshelf: bookshelf
 }
