@@ -140,7 +140,7 @@ describe('Fakestagram Tests', function () {
       agent.post('/messages/').send(request).expect(200, done)
     })
 
-    it('GET message from inbox', function (done) {
+    it('GET all messages from inbox', function (done) {
       agent.get('/messages/').expect(200, done)
     })
 

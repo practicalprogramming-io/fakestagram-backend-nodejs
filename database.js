@@ -14,7 +14,6 @@ var bcrypt = require('bcrypt')
   , Comments
   , UsersFollowers
   , Messages
-  , UsersMessages
 
 
 bookshelf.Model.prototype.save = function () {
@@ -114,17 +113,6 @@ Messages = bookshelf.Model.extend({
   }
 })
 
-UsersMessages = bookshelf.Model.extend({
-  tableName: 'users_messages',
-  idAttribute: 'users_messages_id',
-  users: function () {
-    return this.belongsTo(Users, 'users_id')
-  },
-  messages: function () {
-    return this.belongsTo(Messages, 'messages_id')
-  }
-})
-
 module.exports = {
   Users: Users,
   Content: Content,
@@ -134,6 +122,5 @@ module.exports = {
   Comments: Comments,
   UsersFollowers: UsersFollowers,
   Messages: Messages,
-  UsersMessages: UsersMessages,
   Bookshelf: bookshelf
 }

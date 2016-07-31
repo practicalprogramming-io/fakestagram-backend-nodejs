@@ -46,13 +46,8 @@ CREATE TABLE users_followers (
 CREATE TABLE messages (
     messages_id SERIAL PRIMARY KEY,
     message VARCHAR,
-    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE users_messages (
-    users_messages_id SERIAL PRIMARY KEY,
-    messages_id INTEGER REFERENCES messages(messages_id) ON DELETE CASCADE,
     sender_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE,
     receiver_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE,
-    read BOOLEAN DEFAULT FALSE
+    read BOOLEAN DEFAULT FALSE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
