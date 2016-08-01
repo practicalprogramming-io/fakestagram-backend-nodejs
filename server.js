@@ -38,6 +38,7 @@ server.enable('trust proxy')
 
 
 // Catch unauthorized requests =================================================
+
 server.use(
   function (error, req, res, next) {
     if (error.name === 'UnauthorizedError') {
@@ -46,22 +47,34 @@ server.use(
     }
   })
 
+
+// Allow CORS ==================================================================
+
+server.use(
+  function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header("Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept")
+    next()
+  })
+
+
 // Register, login and logout routes ===========================================
 
 server.post('/login/',
-  passport.authenticate('login'),
   function (req, res, next) {
-    res.status(200).end()
-//    var username = req.user.get('username')
-//    res.redirect('/' + username + '/')
+    passport.authenticate('login', function (error, token, user) {
+      if (error) return res.status(500).json({"error": new Error(error)})
+      return res.status(200).json({"user": user, "token": token})
+    })(req, res, next)
   })
 
 server.post('/register/',
-  passport.authenticate('register'),
   function (req, res, next) {
-    res.status(201).end()
-//    var username = req.user.get('username')
-//    res.redirect('/' + username + '/')
+    passport.authenticate('register', function (error, token, user) {
+      if (error) return res.status(500).json({"error": new Error(error)})
+      return res.status(200).json({"user": user, "token": token})
+    })(req, res, next)
   })
 
 server.get('/logout/',
@@ -110,10 +123,6 @@ server.get('/content/:content_guid/',
   function (req, res, next) {
     return next()
   }, routes.getContent)
-
-
-// Front end routes ============================================================
-
 
 
 module.exports = function (callback) {

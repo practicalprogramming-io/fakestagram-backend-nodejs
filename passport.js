@@ -39,7 +39,7 @@ module.exports = function (passport, config) {
           .save()
           .then(function (user) {
             let token = user.generateJWT()
-            return callback(null, token, user)
+            return callback(null, token, user.toJSON())
           })
           .catch(function (error) {
             return callback(error)
@@ -57,9 +57,7 @@ module.exports = function (passport, config) {
         if (!user) return callback("User does not exist")
         if (!user.validPassword(password)) return callback("Incorrect")
         let token = user.generateJWT()
-        console.log(token)
-        console.log(user)
-        return callback(null, token, user)
+        return callback(null, token, user.toJSON())
       })
       .catch(function (error) {
         return callback(error)
