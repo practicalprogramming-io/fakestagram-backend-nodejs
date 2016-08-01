@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ReactDom from 'react-dom'
+import { browserHistory } from 'react-router'
 import request from 'superagent/lib/client'
 import AuthActions from '../actions/AuthActions'
 import AuthStore from '../stores/AuthStore'
@@ -27,6 +28,7 @@ class Login extends Component {
         if (error) console.log(error)
         AuthActions.logUserIn(response.body.user, response.body.token)
         self.setState({authenticated: true})
+        browserHistory.push('/' + response.body.user.username + '/')
       })
   }
 

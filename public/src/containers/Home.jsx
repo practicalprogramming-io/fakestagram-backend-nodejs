@@ -4,9 +4,14 @@ import ReactDOM from 'react-dom'
 
 class Home extends Component {
 
-  
+  render () {
+    console.log('here')
+    return (
+      <div></div>
+    )
+  }
 
 }
 
 
-default export Home
+export default Home
