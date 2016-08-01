@@ -1,25 +1,31 @@
 'use strict'
 
 
-var express = require('express')
-  , cookieParser = require('cookie-parser')
-  , session = require('express-session')
-  , bodyParser = require('body-parser')
-  , passport = require('passport')
-  , multer = require('multer')
-  , config = require('./config.json')
-  , database = require('./database')
-  , routes = require('./routes')(database)
-  , server = express()
-  , upload = multer({
-      dest: config.uploads,
-      onFileUploadStart: function (file, req, res) {
-        if (config.allowed_extensions.indexOf(file.extension) < 0) return false
-      }
-    })
+const express = require('express')
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
+const bodyParser = require('body-parser')
+const passport = require('passport')
+const multer = require('multer')
+const config = require('./config.json')
+const database = require('./database')
+const routes = require('./routes')(database)
+const jwt = require('express-jwt')
+const server = express()
 
+const requireAuthorization = jwt({
+  secret: config.jwtSecret,
+  userProperty: 'payload'
+})
 
-require('./passport')(passport)
+const upload = multer({
+  dest: config.uploads,
+  onFileUploadStart: function (file, req, res) {
+    if (config.allowed_extensions.indexOf(file.extension) < 0) return false
+  }
+})
+
+require('./passport')(passport, config)
 
 server.set('port', process.env.PORT || 3030)
 server.use(cookieParser('secret'))
@@ -31,11 +37,14 @@ server.use(passport.session())
 server.enable('trust proxy')
 
 
-function requireAuthorization (req, res, next) {
-  if (req.isAuthenticated && req.user.id) return next()
-  else res.status(401).send("Unauthorized request!")
-}
-
+// Catch unauthorized requests =================================================
+server.use(
+  function (error, req, res, next) {
+    if (error.name === 'UnauthorizedError') {
+      res.status(401)
+      res.json({"message": error.name + ": " + error.message})
+    }
+  })
 
 // Register, login and logout routes ===========================================
 
@@ -101,6 +110,10 @@ server.get('/content/:content_guid/',
   function (req, res, next) {
     return next()
   }, routes.getContent)
+
+
+// Front end routes ============================================================
+
 
 
 module.exports = function (callback) {

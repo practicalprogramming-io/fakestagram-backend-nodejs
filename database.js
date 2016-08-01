@@ -1,19 +1,12 @@
 'use strict'
 
 
-var bcrypt = require('bcrypt')
-  , config = require('./config.json')
-  , knex = require('knex')(config.db)
-  , bookshelf = require('bookshelf')(knex)
-  , save = bookshelf.Model.prototype.save
-  , Users
-  , Content
-  , UsersContent
-  , Tags
-  , ContentTags
-  , Comments
-  , UsersFollowers
-  , Messages
+const bcrypt = require('bcrypt')
+const config = require('./config.json')
+const knex = require('knex')(config.db)
+const bookshelf = require('bookshelf')(knex)
+const jwt = require('jsonwebtoken')
+const save = bookshelf.Model.prototype.save
 
 
 bookshelf.Model.prototype.save = function () {
@@ -22,7 +15,7 @@ bookshelf.Model.prototype.save = function () {
   })
 }
 
-Users = bookshelf.Model.extend({
+const Users = bookshelf.Model.extend({
   tableName: 'users',
   idAttribute: 'users_id',
   generateHash: function (password) {
@@ -30,6 +23,16 @@ Users = bookshelf.Model.extend({
   },
   validPassword: function (password) {
     return bcrypt.compareSync(password, this.get('password'))
+  },
+  generateJWT: function () {
+    var expiry = new Date()
+    expiry.setDate(expiry.getDate() + 7)
+    return jwt.sign({
+      _id: this.users_id,
+      email: this.email,
+      username: this.username,
+      exp: parseInt(expiry.getTime() / 1000)
+    }, config.jwtSecret)
   },
   content: function () {
     return this.hasMany(Content, 'users_id')
@@ -51,7 +54,7 @@ Users = bookshelf.Model.extend({
   }
 })
 
-Content = bookshelf.Model.extend({
+const Content = bookshelf.Model.extend({
   tableName: 'content',
   idAttribute: 'content_id',
   user: function () {
@@ -62,7 +65,7 @@ Content = bookshelf.Model.extend({
   }
 })
 
-UsersContent = function (username, content) {
+const UsersContent = function (username, content) {
   var query = knex('content')
     .join('users', 'content.users_id', '=', 'users.users_id')
     .where('users.username', '=', username)
@@ -70,7 +73,7 @@ UsersContent = function (username, content) {
   return query
 }
 
-Tags = bookshelf.Model.extend({
+const Tags = bookshelf.Model.extend({
   tableName: 'tags',
   idAttribute: 'tags_id',
   content: function () {
@@ -78,7 +81,7 @@ Tags = bookshelf.Model.extend({
   }
 })
 
-ContentTags = bookshelf.Model.extend({
+const ContentTags = bookshelf.Model.extend({
   tableName: 'content_tags',
   idAttribute: 'content_tags_id',
   tags: function () {
@@ -86,7 +89,7 @@ ContentTags = bookshelf.Model.extend({
   }
 })
 
-Comments = bookshelf.Model.extend({
+const Comments = bookshelf.Model.extend({
   tableName: 'comments',
   idAttribute: 'comments_id',
   content: function () {
@@ -94,7 +97,7 @@ Comments = bookshelf.Model.extend({
   }
 })
 
-UsersFollowers = bookshelf.Model.extend({
+const UsersFollowers = bookshelf.Model.extend({
   tableName: 'users_followers',
   idAttribute: 'users_followers_id',
   followers: function () {
@@ -105,7 +108,7 @@ UsersFollowers = bookshelf.Model.extend({
   }
 })
 
-Messages = bookshelf.Model.extend({
+const Messages = bookshelf.Model.extend({
   tableName: 'messages',
   idAttribute: 'messages_id',
   users: function () {
