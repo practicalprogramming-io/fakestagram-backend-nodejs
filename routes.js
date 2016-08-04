@@ -14,10 +14,44 @@ module.exports = function (db) {
     getUser: function (req, res, next) {
       var username = req.params.username
       new db.Users({ username: username })
-        .fetch({ withRelated: ['content'] })
+        .fetch()
         .then(function (model) {
+          delete model.attributes.password
           if (!model) return res.status(404)
           return res.status(200).send(model.toJSON())
+        })
+        .catch(function (error) {
+          return res.status(500).send(error)
+        })
+    },
+
+    getUserContent: function (req, res, next) {
+      function getUserContent () {
+        return db.Bookshelf.transaction(function (t) {
+          const user = db.Users.forge({username: req.params.username})
+            .fetch({require: true, transacting: t})
+            .call('get', 'users_id')
+          const content = user.then(function (model) {
+            return db.Content.forge({users_id: user.value()})
+              .fetchPage({require: true, transacting: t, page: 1, pageSize: 12})
+          })
+          return content
+        })
+        .then(function (model) {
+          return Promise.resolve(model)
+        })
+        .catch(function (error) {
+          return Promise.reject(new Error(error))
+        })
+      }
+
+      getUserContent()
+        .then(function (model) {
+          const data = {
+            "metadata": {"pagination": model.pagination},
+            "data": model.toJSON()
+          }
+          return res.status(200).send(data)
         })
         .catch(function (error) {
           return res.status(500).send(error)

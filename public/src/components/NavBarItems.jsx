@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import AuthStore from '../stores/AuthStore'
 
 
 export class Brand extends Component {
@@ -50,9 +51,14 @@ export class Search extends Component {
 }
 
 
-export class Favorites extends Component {
+export class NavItemOne extends Component {
 
   render () {
+    if (!AuthStore.isAuthenticated()) {
+      return (
+        <li><a href="/">Register</a></li>
+      )
+    }
     return (
       <li><a href="#"><span className="glyphicon glyphicon-heart" aria-hidden="true"></span></a></li>
     )
@@ -61,9 +67,14 @@ export class Favorites extends Component {
 }
 
 
-export class User extends Component {
+export class NavItemTwo extends Component {
 
   render () {
+    if (!AuthStore.isAuthenticated()) {
+      return (
+        <li><a href="/">Login</a></li>
+      )
+    }
     return (
       <li><a href="/:username/"><span className="glyphicon glyphicon-user" aria-hidden="true"></span></a></li>
     )

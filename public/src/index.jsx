@@ -11,7 +11,7 @@ ReactDOM.render(
   <Router history={browserHistory}>
     <Route path="/" component={Landing} />
     <Route path="/" component={App}>
-      <Route name="home" path="/:username/" component={Home} />
+      <Route path="/:username/" component={Home} />
     </Route>
   </Router>,
   document.getElementById('fakestagram')

@@ -9,6 +9,8 @@ const jwt = require('jsonwebtoken')
 const save = bookshelf.Model.prototype.save
 
 
+bookshelf.plugin('pagination')
+
 bookshelf.Model.prototype.save = function () {
   return save.apply(this, arguments).then(function (model) {
     return model ? model.fetch() : model

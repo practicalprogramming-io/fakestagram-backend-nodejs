@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Brand, Search, Favorites, User } from '../components/NavBarItems'
+import { Brand, Search, NavItemOne, NavItemTwo } from '../components/NavBarItems'
 
 
 class NavBar extends Component {
@@ -14,8 +14,8 @@ class NavBar extends Component {
           <div className="collapse navbar-collapse" id="fakestagram-navbar">
             <Search />
             <ul className="nav navbar-nav navbar-right">
-              <Favorites />
-              <User />
+              <NavItemOne />
+              <NavItemTwo />
             </ul>
           </div>
         </div>
