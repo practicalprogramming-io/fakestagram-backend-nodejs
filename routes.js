@@ -26,7 +26,7 @@ module.exports = function (db) {
 
     postContent: function (req, res, next) {
       var contentData = {
-        "users_id": req.user.attributes.users_id,
+        "users_id": req.user.users_id,
         "size": req.file.size,
         "original_name": req.file.originalname,
         "name": req.file.filename,
@@ -89,7 +89,7 @@ module.exports = function (db) {
 
     getMessage: function (req, res, next) {
       var messagesId = req.params.messages_id ? req.params.messages_id : null
-        , user = req.user.attributes.users_id
+        , user = req.user.users_id
       if (!messagesId) {
         db.Messages.forge()
           .where('sender_id', '=', user, 'or', 'receiver_id', '=', user)
@@ -111,7 +111,7 @@ module.exports = function (db) {
 
       function createMessage () {
         return db.Bookshelf.transaction(function (t) {
-          var sendUser = req.user.attributes.users_id
+          var sendUser = req.user.users_id
             , message = req.body.message
             , receiveUser
             , messages

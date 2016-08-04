@@ -28,9 +28,9 @@ const Users = bookshelf.Model.extend({
     var expiry = new Date()
     expiry.setDate(expiry.getDate() + 7)
     return jwt.sign({
-      _id: this.users_id,
-      email: this.email,
-      username: this.username,
+      users_id: this.attributes.users_id,
+      email: this.attributes.email,
+      username: this.attributes.username,
       exp: parseInt(expiry.getTime() / 1000)
     }, config.jwtSecret)
   },

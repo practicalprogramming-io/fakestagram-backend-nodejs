@@ -15,7 +15,6 @@ const server = express()
 
 const requireAuthorization = jwt({
   secret: config.jwtSecret,
-  userProperty: 'payload'
 })
 
 const upload = multer({
@@ -36,7 +35,19 @@ server.use(passport.initialize())
 server.use(passport.session())
 server.enable('trust proxy')
 
-
+/*
+server.use(
+  function (req, res, next) {
+    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+      jwt.verify(req.headers.authorization.split(' ')[1], config.jwtSecret, function (error, decoded) {
+        if (error) console.log(error)
+        console.log(decoded)
+      })
+    }
+    console.log('here')
+    return next()
+  })
+*/
 // Catch unauthorized requests =================================================
 
 server.use(
