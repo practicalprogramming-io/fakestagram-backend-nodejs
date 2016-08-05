@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import request from 'superagent/lib/client'
+import ImageActions from '../actions/ImageActions'
+import ImageStore from '../stores/ImageStore'
+import HomeImageItem from '../components/HomeImages'
 
 
 class Home extends Component {
@@ -17,20 +20,29 @@ class Home extends Component {
   componentDidMount () {
     this.request = request.get(this.state.url)
       .end(function (error, response) {
-        if (error) console.log(error)
-        this.setState({
-          data: response.body.data,
-          pagination: response.body.metadata.pagination
-        })
+        if (error) throw error
+        ImageActions.setCurrentData(response.body.data, response.body.metadata)
       }.bind(this))
   }
 
   componentWillUnmount () {
     this.request.abort()
+    ImageStore.removeChangeListener()
+  }
+
+  generateThumbnails (image) {
+    return <HomeImageItem data={image} />
   }
 
   render () {
-    console.log(this.state)
+
+    ImageStore.addChangeListener(function () {
+      const data = ImageStore.getCurrentData()
+      this.setState({
+        data: data
+      })
+    }.bind(this))
+
     return (
       <div className="container">
 
