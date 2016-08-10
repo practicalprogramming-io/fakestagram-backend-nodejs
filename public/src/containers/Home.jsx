@@ -31,13 +31,13 @@ export default class Home extends Component {
 
   generateThumbnails (image) {
     return <HomeImageItem
-      location={"http:localhost:3030/images/" + image.name}
+      location={"http://localhost:3030/images/" + image.name}
       contentid={image.content_id}
     />
   }
 
   generateThumbnailView () {
-    return <HomeImageView />
+    return <HomeImageView thumbnails={this.state.thumbnails}/>
   }
 
   render () {
@@ -49,7 +49,7 @@ export default class Home extends Component {
       this.setState({thumbnails: this.state.data.map(this.generateThumbnails)})
     }.bind(this))
 
-    const thumbnails = this.state.thumbnails
+    const thumbnails = this.generateThumbnailView()
 
     return (
       <div className="container">

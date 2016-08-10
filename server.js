@@ -2,6 +2,8 @@
 
 
 const express = require('express')
+const crypto = require('crypto')
+const mime = require('mime')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const bodyParser = require('body-parser')
@@ -17,8 +19,21 @@ const requireAuthorization = jwt({
   secret: config.jwtSecret,
 })
 
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, config.uploads)
+  },
+  filename: function (req, file, callback) {
+    crypto.pseudoRandomBytes(16, function (error, raw) {
+      callback(null,
+        raw.toString('hex') + Date.now() + '.' + mime.extension(file.mimetype)
+      )
+    })
+  }
+})
+
 const upload = multer({
-  dest: config.uploads,
+  storage: storage,
   onFileUploadStart: function (file, req, res) {
     if (config.allowed_extensions.indexOf(file.extension) < 0) return false
   }

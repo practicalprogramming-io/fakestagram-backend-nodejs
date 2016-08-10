@@ -64,6 +64,7 @@ module.exports = function (db) {
         "size": req.file.size,
         "original_name": req.file.originalname,
         "name": req.file.filename,
+        "mime": req.file.mimetype,
         "location": req.file.path,
         "upload_ip": req.connection.remoteAddress
       }

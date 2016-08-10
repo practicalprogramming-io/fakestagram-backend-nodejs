@@ -14,6 +14,7 @@ CREATE TABLE content (
     size INTEGER,
     original_name VARCHAR,
     name VARCHAR,
+    mime VARCHAR,
     location VARCHAR,
     upload_ip VARCHAR,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
