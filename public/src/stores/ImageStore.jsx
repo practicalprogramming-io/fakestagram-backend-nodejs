@@ -20,6 +20,10 @@ class ImageStoreClass extends EventEmitter {
       if (!this.data) return new Error('No current data!')
       return this.data
     }
+    getCurrentMetadata () {
+      if (!this.metadata) return new Error('No current metadata!')
+      return this.metadata
+    }
     setCurrentData (data, metadata, callback) {
       this.data = data
       this.metadata = metadata

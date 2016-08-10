@@ -34,6 +34,7 @@ server.use(bodyParser.json({limit: '25mb'}))
 server.use(passport.initialize())
 //server.use(passport.session())
 server.enable('trust proxy')
+server.use('/images', express.static(__dirname + '/uploads/'))
 
 
 // Catch unauthorized requests =================================================

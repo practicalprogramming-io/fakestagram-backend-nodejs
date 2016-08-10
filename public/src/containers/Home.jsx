@@ -3,23 +3,22 @@ import ReactDOM from 'react-dom'
 import request from 'superagent/lib/client'
 import ImageActions from '../actions/ImageActions'
 import ImageStore from '../stores/ImageStore'
-import HomeImageItem from '../components/HomeImages'
+import { HomeImageItem, HomeImageView } from '../components/HomeImages'
 
 
-class Home extends Component {
+export default class Home extends Component {
 
   constructor (props) {
     super()
     this.state = {
       url: 'http://localhost:3030/' + props.params.username + '/content/',
       data: null,
-      pagination: null
+      thumbnails: null
     }
   }
 
   componentDidMount () {
-    this.request = request.get(this.state.url)
-      .end(function (error, response) {
+    this.request = request.get(this.state.url).end(function (error, response) {
         if (error) throw error
         ImageActions.setCurrentData(response.body.data, response.body.metadata)
       }.bind(this))
@@ -31,26 +30,32 @@ class Home extends Component {
   }
 
   generateThumbnails (image) {
-    return <HomeImageItem data={image} />
+    return <HomeImageItem
+      location={"http:localhost:3030/images/" + image.name}
+      contentid={image.content_id}
+    />
+  }
+
+  generateThumbnailView () {
+    return <HomeImageView />
   }
 
   render () {
 
     ImageStore.addChangeListener(function () {
       const data = ImageStore.getCurrentData()
-      this.setState({
-        data: data
-      })
+      const metadata = ImageStore.getCurrentMetadata()
+      this.setState({data: data})
+      this.setState({thumbnails: this.state.data.map(this.generateThumbnails)})
     }.bind(this))
+
+    const thumbnails = this.state.thumbnails
 
     return (
       <div className="container">
-
+        {thumbnails}
       </div>
     )
   }
 
 }
-
-
-export default Home

@@ -6,7 +6,18 @@ export class HomeImageItem extends Component {
 
   render () {
     return (
-      <img src="" class="img-responsive" />
+      <img src={this.props.location} className="img-responsive" name={this.props.contentid} />
+    )
+  }
+
+}
+
+
+export class HomeImageView extends Component {
+
+  render () {
+    return (
+      <div></div>
     )
   }
 
