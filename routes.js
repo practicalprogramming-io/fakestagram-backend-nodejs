@@ -26,6 +26,7 @@ module.exports = function (db) {
     },
 
     getUserContent: function (req, res, next) {
+      const page = req.query.page ? req.query.page : 1
       function getUserContent () {
         return db.Bookshelf.transaction(function (t) {
           const user = db.Users.forge({username: req.params.username})
@@ -33,7 +34,7 @@ module.exports = function (db) {
             .call('get', 'users_id')
           const content = user.then(function (model) {
             return db.Content.forge({users_id: user.value()})
-              .fetchPage({require: true, transacting: t, page: 1, pageSize: 12})
+              .fetchPage({require: true, transacting: t, page: page, pageSize: 12})
           })
           return content
         })

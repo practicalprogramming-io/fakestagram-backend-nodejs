@@ -7,6 +7,10 @@ const CHANGE_EVENT = 'change'
 
 
 class ImageStoreClass extends EventEmitter {
+    constructor () {
+      super()
+      this.page = this.page ? this.page : 1
+    }
     emitChange () {
       this.emit(CHANGE_EVENT)
     }
@@ -14,7 +18,13 @@ class ImageStoreClass extends EventEmitter {
       this.on(CHANGE_EVENT, callback)
     }
     removeChangeListener (callback) {
+      delete this.username
       this.removeListener(CHANGE_EVENT, callback)
+    }
+    setCurrentUser (username) {
+      this.username = username
+      this.nextURL = this.nextURL ? this.nextURL : 'http://localhost:3030/' + this.username + '/content/?page=' + this.page
+      return this.username
     }
     getCurrentData () {
       if (!this.data) return new Error('No current data!')
@@ -24,9 +34,14 @@ class ImageStoreClass extends EventEmitter {
       if (!this.metadata) return new Error('No current metadata!')
       return this.metadata
     }
+    getNextURL () {
+      return this.nextURL
+    }
     setCurrentData (data, metadata, callback) {
       this.data = data
       this.metadata = metadata
+      this.page = metadata.pagination.page + 1
+      this.nextURL = 'http://localhost:3030/' + this.username + '/content/?page=' + this.page
       callback()
     }
 }

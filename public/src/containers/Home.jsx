@@ -10,18 +10,18 @@ export default class Home extends Component {
 
   constructor (props) {
     super()
+    ImageStore.setCurrentUser(props.params.username)
     this.state = {
-      url: 'http://localhost:3030/' + props.params.username + '/content/',
       data: null,
+      url: null,
       thumbnails: null
     }
+    this.loadMoreImages = this.loadMoreImages.bind(this)
+    this.loadImages = this.loadImages.bind(this)
   }
 
   componentDidMount () {
-    this.request = request.get(this.state.url).end(function (error, response) {
-        if (error) throw error
-        ImageActions.setCurrentData(response.body.data, response.body.metadata)
-      }.bind(this))
+    this.loadImages()
   }
 
   componentWillUnmount () {
@@ -40,6 +40,20 @@ export default class Home extends Component {
     return <HomeImageView thumbnails={this.state.thumbnails}/>
   }
 
+  loadImages () {
+    const url = ImageStore.getNextURL()
+    this.request = request.get(url).end(function (error, response) {
+        if (error) throw error
+        ImageActions.setCurrentData(response.body.data, response.body.metadata)
+      }.bind(this))
+  }
+
+  loadMoreImages () {
+    this.loadImages()
+    const node = React.findDOMNode(this)
+    console.log(node)
+  }
+
   render () {
 
     ImageStore.addChangeListener(function () {
@@ -54,6 +68,7 @@ export default class Home extends Component {
     return (
       <div className="container">
         {thumbnails}
+        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={this.loadMoreImages}>Load more</button>
       </div>
     )
   }
